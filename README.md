@@ -4,14 +4,14 @@ A Garman–Kohlhagen pricer for a six-month USDINR call on an imported materials
 
 ![Options pricer](docs/screenshot.png)
 
-**Live:** _add your deployment URL here_ · **Author:** Tanmay Vaswani
+**Live:** https://tanmayvasvani.github.io/options-pricer/ · **Author:** Tanmay Vaswani
 
 ## What it does
 
 The base contract covers a $2.4 million resin order: a six-month call on USDINR struck at 85 with spot at 83.80, 5.5% volatility, a 6.5% rupee rate and a 4.5% dollar rate. The page prices it per dollar and for the whole order, and reads the result back in commercial terms (what share of the invoice the cover costs, what a one-rupee move does to it, what a day of decay costs). The second book is a three-month Nifty put, where a dividend yield stands in for the foreign rate.
 
 - **Closed form** price with delta, gamma, vega, theta and both rhos (domestic and foreign, because a currency option has two rates).
-- **Implied volatility** of a quoted premium, solved by Newton's method on vega, with an honest "no volatility reproduces this quote" when the quote sits below the no-arbitrage floor.
+- **Implied volatility** of a quoted premium, solved by Newton's method on vega. If the quote sits below the no-arbitrage floor, no volatility reproduces it.
 - **Put–call parity** as a live identity check.
 - **Value as the spot moves**, against intrinsic value.
 - **A parametric smile** (mild upside skew for USDINR, the usual equity skew for the index) used to reprice a ladder of strikes.
@@ -25,10 +25,6 @@ Base case: ₹1.11 per dollar, ₹26.6 lakh on the order (1.3% of the invoice), 
 - The normal CDF is Hart's rational approximation as given by West (2005), accurate to roughly 1e-14, so finite-difference Greeks agree with the analytic ones to many digits (the tests check this).
 - The tree is Cox–Ross–Rubinstein with u = e^(σ√Δt), d = 1/u and the risk-neutral probability built from the same two rates. American value is the maximum of continuation and immediate exercise at every node.
 - The smile is ATM vol × (1 + skew·m + convexity·m²) in log-moneyness m relative to the forward. It is illustrative, not fitted to a market.
-
-## What is deliberately left out
-
-A fitted volatility surface, stochastic or local volatility, discrete dividends, day-count conventions, bid–ask spreads and margin. The smile is parametric and the tree is the plain CRR lattice; the page says so.
 
 ## Checks
 
@@ -55,7 +51,7 @@ React 19, TypeScript (strict, `noUncheckedIndexedAccess`), Vite, Tailwind CSS 4,
 
 ## Data
 
-Spot, rates and volatilities are illustrative inputs, not live market data. Nothing here is a trade recommendation, a forecast or a solicitation.
+Spot, rates and volatilities are inputs, not live market data.
 
 ## License
 
